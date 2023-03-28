@@ -1,6 +1,7 @@
 import json
 import cpvmanager
 
+from cpvmanager import *
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 noticeList = []
@@ -11,63 +12,80 @@ sameCat = 0
 sameClass = 0
 sameGroup = 0
 sameDiv = 0
-s = 0
+notMatching = 0
 
-# SmoothingFunction() consente di evitare di essere penalizzati dall'assenza di corrispondenze relativamente a un
-# n-gram tra frase target e frase generata
+bs = 0
+bsSameCode = 0
+bsSameCat = 0
+bsSameClass = 0
+bsSameGroup = 0
+bsSameDiv = 0
+bsNotMatching = 0
+
+# SmoothingFunction() consente di evitare di essere penalizzati dall'assenza di corrispondenze di n-gram tra frase
+# target e frase generata
 chencherry = SmoothingFunction()
-
-# elimino l'eventuale contenuto del file bleufile.txt
-# with open("bleufile.txt", 'r+') as file:
-#     file.truncate(0)
-
 
 with open('cpv_5M_generated.json') as file:
     for objJSON in file:
         notice = json.loads(objJSON)
         noticeList.append(notice)
 
-# with open('bleufile.txt', 'a') as f:
-#     f.write(str(sentence_bleu(ref, gen, weights=(0.5, 0.5, 0, 0), smoothing_function=chencherry.method1)))
-#     f.write('\n')
-# f.close()
-
 for element in noticeList:
     ref = element["target"]
     gen = element["generated"][0]
 
-    s += sentence_bleu([ref[cpvmanager.DESCR:].split()], gen[cpvmanager.DESCR:].split(),
-                       weights=(0.5, 0.5, 0, 0), smoothing_function=chencherry.method1)
+    # calcoliamo il punteggio considerando unicamente 1-gram e 2-gram per evitare di avere valori troppo bassi,
+    # considerata la dimensione delle stringhe
+    bleuScore = sentence_bleu([ref[cpvmanager.DESCR:].split()], gen[cpvmanager.DESCR:].split(),
+                              weights=(0.5, 0.5, 0, 0), smoothing_function=chencherry.method1)
 
-    if ref == gen:
+    bs += bleuScore
+
+    if has_same_string(ref, gen):
         sameString += 1
-    if ref[:cpvmanager.COD] == gen[:cpvmanager.COD]:
+    elif has_same_code(ref, gen):
         sameCode += 1
-    if ref[:cpvmanager.CAT] == gen[:cpvmanager.CAT]:
+        bsSameCode += bleuScore
+    elif has_same_cat(ref, gen):
         sameCat += 1
-    if ref[:cpvmanager.CLASS] == gen[:cpvmanager.CLASS]:
+        bsSameCat += bleuScore
+    elif has_same_class(ref, gen):
         sameClass += 1
-    if ref[:cpvmanager.GROUP] == gen[:cpvmanager.GROUP]:
+        bsSameClass += bleuScore
+    elif has_same_group(ref, gen):
         sameGroup += 1
-    if ref[:cpvmanager.DIV] == gen[:cpvmanager.DIV]:
+        bsSameGroup += bleuScore
+    elif has_same_div(ref, gen):
         sameDiv += 1
+        bsSameDiv += bleuScore
+    else:
+        notMatching += 1
+        bsNotMatching += bleuScore
 
-avg = s / (len(noticeList))
+# calcolo della media del Bleu score
+dim = len(noticeList)
+bs = bs / dim
+bsSameCode = bsSameCode / sameCode
+bsSameCat = bsSameCat / sameCat
+bsSameDiv = bsSameDiv / sameDiv
+bsSameGroup = bsSameGroup / sameGroup
+bsSameClass = bsSameClass / sameClass
+bsNotMatching = bsNotMatching / notMatching
 
-print(len(noticeList))
-print(sameString)
-print(sameCode)
-print(sameCat)
-print(sameClass)
-print(sameGroup)
-print(sameDiv)
-print(avg)
-
-# gen1 = noticeList[0]["generated"][0].split()
-# print(sentence_bleu(ref1, gen1, weights=(1, 0, 0, 0)))
-
-# ref2 = [noticeList[2]["target"].split()]
-# gen2 = noticeList[2]["generated"][0].split()
-# print(sentence_bleu(ref2, gen2, smoothing_function=chencherry.method1))
-# print(sentence_bleu(ref2, target2, weights=(0.25, 0.25, 0.25, 0.25), smoothing_function=chencherry.method1))
-# print(sentence_bleu(ref2, target2, weights=(1, 0, 0, 0), smoothing_function=chencherry.method1))
+print("numero test = {}".format(dim))
+print("I test hanno riportato i seguenti risultati:")
+print("- presentanti codice e descrizione corrispondente = {}".format(sameString))
+print("- presentanti codice corrispondente = {}".format(sameCode))
+print("- presentanti categoria corrispondente = {}".format(sameCat))
+print("- presentanti classe corrispondente = {}".format(sameClass))
+print('- presentanti gruppo corrispondente = {}'.format(sameGroup))
+print('- presentanti divisione corrispondente = {}'.format(sameDiv))
+print('- In nessun modo corrispondenti = {}'.format(notMatching))
+print("- Media Bleu score totale = {}".format(bs))
+print("- Media Bleu score di elementi con stesso codice ma descrizione diversa = {}".format(bsSameCode))
+print("- Media Bleu score di elementi con stessa categoria = {}".format(bsSameCat))
+print("- Media Bleu score di elementi con stessa classe = {}".format(bsSameClass))
+print("- Media Bleu score di elementi con stesso gruppo = {}".format(bsSameGroup))
+print("- Media Bleu score di elementi con stessa divisione = {}".format(bsSameDiv))
+print("- Media Bleu score di elementi non corrispondenti = {}".format(bsNotMatching))
