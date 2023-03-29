@@ -1,8 +1,10 @@
 import json
 import cpvmanager
+import openpyxl
 
 from cpvmanager import *
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+from openpyxl import load_workbook
 
 noticeList = []
 
@@ -72,6 +74,40 @@ bsSameDiv = bsSameDiv / sameDiv
 bsSameGroup = bsSameGroup / sameGroup
 bsSameClass = bsSameClass / sameClass
 bsNotMatching = bsNotMatching / notMatching
+
+workbook = load_workbook('spreadsheet1.xlsx')
+sheet = workbook.active
+
+sheet['A2'].value = "Completamente corrispondente"
+sheet['A3'].value = "Codice corrispondente"
+sheet['A4'].value = "Categoria corrispondente"
+sheet['A5'].value = "Classe corrispondente"
+sheet['A6'].value = "Gruppo corrispondente"
+sheet['A7'].value = "Divisione corrispondente"
+sheet['A8'].value = "Non corrispondenti"
+sheet['A9'].value = "Tutti i test"
+
+sheet['B1'].value = "Quantità"
+sheet['B2'].value = sameString
+sheet['B3'].value = sameCode
+sheet['B4'].value = sameCat
+sheet['B5'].value = sameClass
+sheet['B6'].value = sameGroup
+sheet['B7'].value = sameDiv
+sheet['B8'].value = notMatching
+sheet['B9'].value = dim
+
+sheet['C1'].value = "Media BLEU score"
+sheet['C2'].value = 1
+sheet['C3'].value = bsSameCode
+sheet['C4'].value = bsSameCat
+sheet['C5'].value = bsSameClass
+sheet['C6'].value = bsSameGroup
+sheet['C7'].value = bsSameDiv
+sheet['C8'].value = bsNotMatching
+sheet['C9'].value = bs
+
+workbook.save('spreadsheet1.xlsx')
 
 print("numero test = {}".format(dim))
 print("I test hanno riportato i seguenti risultati:")
