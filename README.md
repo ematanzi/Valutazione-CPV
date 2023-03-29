@@ -24,3 +24,18 @@ Inoltre, si impiega la **metrica Bleu** per individuare la corrispondenza tra le
 - la media dei Bleu score di elementi con gruppo corrispondente;
 - la media dei Bleu score di elementi con divisione corrispondente;
 - la media dei Bleu score di elementi con nessuna corrispondenza.
+
+## **Risultati**
+I risultati della valutazione sono stati inseriti all'interno di un file Excel. Il file corrisponde al percorso: **Valutazione-CPV/AnalysisCPV/spreadsheet1.xlsx**.
+I risultati ottenuti sono presentati nella seguente tabella:
+
+| |Quantità |Media BLEU score |
+|------------ |------------ |------------ |
+|Completamente corrispondente|372188 |1,0|
+|Codice corrispondente|2403|0,466484497920533|
+|Categoria corrispondente|76735|0,25729930592887|
+|Classe corrispondente|115614|0,225988635255609|
+|Gruppo corrispondente|109190|0,135904133495634|
+|Divisione corrispondente|110555|0,167952746307877|
+|Non corrispondenti|213315|0,0860599521618884|
+|Tutti i test|1000000|0,454648514041545|
