@@ -39,3 +39,16 @@ I risultati ottenuti sono presentati nella seguente tabella:
 |Divisione corrispondente|110555|0,167952746307877|
 |Non corrispondenti|213315|0,0860599521618884|
 |Tutti i test|1000000|0,454648514041545|
+
+In seguito, sono stati ottenuti dei nuovi risultati impiegando il modello it5-base, come riportato nel foglio di calcolo Excel disponibile al percorso **Valutazione-CPV/AnalysisCPV/spreadsheet2.xlsx**. I risultati sono i seguenti:
+
+| |Quantità |Media BLEU score |
+|------------ |------------ |------------ |
+|Completamente corrispondente|359408 |1,0|
+|Codice corrispondente|2210|0,485427223340654|
+|Categoria corrispondente|73885|0,243696297543837|
+|Classe corrispondente|114487|0,219889511329024|
+|Gruppo corrispondente|114430|0,123508325003425|
+|Divisione corrispondente|111538|0,163494735526761|
+|Non corrispondenti|224042|0,0852636605159465|
+|Tutti i test|1000000|0,438534472855048|
