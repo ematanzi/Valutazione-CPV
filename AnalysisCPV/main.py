@@ -28,7 +28,7 @@ bsNotMatching = 0
 # target e frase generata
 chencherry = SmoothingFunction()
 
-with open('cpv_5M_generated.json') as file:
+with open('cpv_5M_base_generated.json') as file:
     for objJSON in file:
         notice = json.loads(objJSON)
         noticeList.append(notice)
@@ -75,7 +75,7 @@ bsSameGroup = bsSameGroup / sameGroup
 bsSameClass = bsSameClass / sameClass
 bsNotMatching = bsNotMatching / notMatching
 
-workbook = load_workbook('spreadsheet1.xlsx')
+workbook = load_workbook('spreadsheet2.xlsx')
 sheet = workbook.active
 
 sheet['A2'].value = "Completamente corrispondente"
@@ -107,7 +107,7 @@ sheet['C7'].value = bsSameDiv
 sheet['C8'].value = bsNotMatching
 sheet['C9'].value = bs
 
-workbook.save('spreadsheet1.xlsx')
+workbook.save('spreadsheet2.xlsx')
 
 print("numero test = {}".format(dim))
 print("I test hanno riportato i seguenti risultati:")
