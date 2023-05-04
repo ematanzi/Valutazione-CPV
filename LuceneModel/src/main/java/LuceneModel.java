@@ -44,7 +44,7 @@ public class LuceneModel {
 
                 Document doc = new Document();
                 doc.add(new TextField("code", set.getKey(), Field.Store.YES));
-                doc.add(new TextField("description", set.getValue(), Field.Store.YES));
+                doc.add(new TextField("description", set.getValue().toLowerCase(), Field.Store.YES));
 
                 writer.addDocument(doc);
 
@@ -55,7 +55,6 @@ public class LuceneModel {
 
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(fsdir));
 
-            // !!!
             searcher.setSimilarity(config.getIwc().getSimilarity());
 
             QueryParser qp = new QueryParser("description", config.getIwc().getAnalyzer());
@@ -69,11 +68,9 @@ public class LuceneModel {
 
             for (CpvData data : cpvData) {
 
-                // la stringa query viene estratta e modificata per favorire il parsing e la ricerca
-                String source = data.getSource().toLowerCase()
-                        .replaceAll("[^a-z&&[^\\s]]", "");
+                String source = data.getSource().toLowerCase();
 
-                Query q = qp.parse(source);
+                Query q = qp.parse(QueryParser.escape(source));
 
                 // scrittura del primo risultato in corrispondenza di ogni query (generated)
                 TopDocs firstDoc = searcher.search(q, 1);

@@ -1,13 +1,14 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class CpvData {
@@ -36,10 +37,10 @@ public class CpvData {
 
         try {
 
-            Scanner scanner = new Scanner(file);
+            BufferedReader br = new BufferedReader(new FileReader(file));
 
-            while (scanner.hasNextLine()) {
-                String jsonString = scanner.nextLine();
+            while (br.readLine() != null) {
+                String jsonString = br.readLine();
 
                 GsonBuilder builder = new GsonBuilder();
                 builder.setPrettyPrinting();
@@ -50,16 +51,16 @@ public class CpvData {
                 cpvData.add(cpvElement);
             }
 
-            scanner.close();
-
+            br.close();
 
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         return cpvData;
     }
-
 
     public void jsonWriter(BufferedWriter writer) {
 
