@@ -6,8 +6,8 @@ from cpvmanager import *
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from openpyxl import load_workbook
 
-jsonFile = 'cpv_5M_base_generated.json'
-xlsxFile = 'spreadsheet2.xlsx'
+jsonFile = 'cpv_ItalianAnalyzer_LMS_generated.json'
+xlsxFile = 'spreadsheetIA_LMS.xlsx'
 
 noticeList = []
 
