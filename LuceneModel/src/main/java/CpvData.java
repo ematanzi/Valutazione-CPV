@@ -37,8 +37,7 @@ public class CpvData {
         List<CpvData> cpvData = new ArrayList();
 
         try {
-
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            
             Scanner scanner = new Scanner(file);
 
             while (scanner.hasNextLine()) {
