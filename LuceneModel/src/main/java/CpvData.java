@@ -9,7 +9,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class CpvData {
@@ -37,11 +36,11 @@ public class CpvData {
         List<CpvData> cpvData = new ArrayList();
 
         try {
-            
-            Scanner scanner = new Scanner(file);
 
-            while (scanner.hasNextLine()) {
-                String jsonString = scanner.nextLine();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            while (reader.ready()){
+                String jsonString = reader.readLine();
 
                 GsonBuilder builder = new GsonBuilder();
                 builder.setPrettyPrinting();
@@ -52,10 +51,11 @@ public class CpvData {
                 cpvData.add(cpvElement);
             }
 
-            scanner.close();
-
+            reader.close();
 
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
